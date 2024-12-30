@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="FetchSalesDataSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <propertyGroup>
+        <property name="X-Sequence-Name" scope="default" type="STRING" value="FetchSalesDataSequence.xml"/>
+        <property expression="get-property('SYSTEM_DATE',&quot;yyyy-mm-dd'T'HH:mm:ss:SSS&quot;)" name="timestamp" scope="default" type="STRING"/>
+    </propertyGroup>
+    <call-template description="Call global-log-temp" target="global-log-temp">
+        <with-param name="status" value="Start"/>
+        <with-param name="level" value="custom"/>
+        <with-param name="message" value="FetchSalesDataSequence-Start"/>
+        <with-param name="error" value="false"/>
+    </call-template>
+    <payloadFactory media-type="json">
+        <format>{"FormattedDate" : "'$1'"}</format>
+        <args>
+            <arg evaluator="xml" expression="get-property('timestamp')"/>
+        </args>
+    </payloadFactory>
+    <property expression="json-eval($.FormattedDate)" name="CurrentDate" scope="default" type="STRING"/>
+    <dblookup>
+        <connection>
+            <pool>
+                <driver>com.mysql.cj.jdbc.Driver</driver>
+                <url>jdbc:mysql://localhost:3306/Customerorders</url>
+                <user>Himasree</user>
+                <password>password</password>
+            </pool>
+        </connection>
+        <statement>
+            <sql><![CDATA[SELECT * FROM OrdersData WHERE OrderDate >= ?]]></sql>
+            <parameter expression="get-property('CurrentDate')" type="VARCHAR"/>
+            <result column="ShippingCost" name="ShippingCost"/>
+            <result column="Quantity" name="Quantity"/>
+            <result column="ProductID" name="ProductID"/>
+            <result column="CustomerID" name="CustomerID"/>
+            <result column="TotalAmount" name="TotalAmount"/>
+            <result column="OrderID" name="OrderID"/>
+            <result column="OrderDate" name="OrderDate"/>
+        </statement>
+    </dblookup>
+    <sequence description="Call generate-CSV-report-sequence" key="generate-CSV-report-sequence"/>
+    <call-template description="Call global-log-temp" target="global-log-temp">
+        <with-param name="status" value="End"/>
+        <with-param name="level" value="custom"/>
+        <with-param name="message" value="FetchSalesDataSequence-End"/>
+        <with-param name="error" value="false"/>
+    </call-template>
+    <respond/>
+</sequence>
