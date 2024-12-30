@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="FetchSalesDataTask" groupId="com.example.task" version="1.0.0" type="synapse/task" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/tasks/FetchSalesDataTask.xml</file>
+    </artifact>
+    <artifact name="generate-CSV-report-sequence" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/generate-CSV-report-sequence.xml</file>
+    </artifact>
+    <artifact name="FetchSalesDataSequence" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/FetchSalesDataSequence.xml</file>
+    </artifact>
+    <artifact name="global-log-temp" groupId="com.example.template" version="1.0.0" type="synapse/sequenceTemplate" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/templates/global-log-temp.xml</file>
+    </artifact>
+    <artifact name="common-fault-sequence" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/common-fault-sequence.xml</file>
+    </artifact>
+    <artifact name="localconnection" groupId="com.example.local-entry" version="1.0.0" type="synapse/local-entry" serverRole="EnterpriseServiceBus">
+        <file>\src\main\synapse-config\local-entries\localconnection.xml</file>
+    </artifact>
+</artifacts>

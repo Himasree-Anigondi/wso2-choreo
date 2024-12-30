@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<localEntry xmlns="http://ws.apache.org/ns/synapse" key="localconnection">
+    <file.init>
+        <workingDir>C:/Users/himas/OneDrive - exavalu/Documents/WSO2/orderTableCSVreport</workingDir>
+        <name>localconnection</name>
+        <fileLockScheme>Local</fileLockScheme>
+        <connectionType>LOCAL</connectionType>
+    </file.init>
+</localEntry>

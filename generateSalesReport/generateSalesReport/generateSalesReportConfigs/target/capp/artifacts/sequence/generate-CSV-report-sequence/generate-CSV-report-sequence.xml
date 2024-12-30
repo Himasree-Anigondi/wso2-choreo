@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="generate-CSV-report-sequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <propertyGroup>
+        <property name="X-Sequence-Name" scope="default" type="STRING" value="generate-CSV-report-sequence.xml"/>
+    </propertyGroup>
+    <call-template description="Call global-log-temp" target="global-log-temp">
+        <with-param name="status" value="Start"/>
+        <with-param name="level" value="custom"/>
+        <with-param name="message" value="generate-CSV-report-sequence-Start"/>
+        <with-param name="error" value="false"/>
+    </call-template>
+    <payloadFactory media-type="json">
+        <format>{&#xd;
+	"OrderData": {&#xd;
+		"OrderID": "$1",&#xd;
+		"CustomerID": "$2",&#xd;
+		"ProductID": "$3",&#xd;
+		"Quantity": "$4",&#xd;
+		"TotalAmount": "$5",&#xd;
+		"ShippingCost": "$6",&#xd;
+		"OrderDate":"$7"&#xd;
+	}&#xd;
+}</format>
+        <args>
+            <arg evaluator="xml" expression="get-property('OrderID')"/>
+            <arg evaluator="xml" expression="get-property('CustomerID')"/>
+            <arg evaluator="xml" expression="get-property('ProductID')"/>
+            <arg evaluator="xml" expression="get-property('Quantity')"/>
+            <arg evaluator="xml" expression="get-property('TotalAmount')"/>
+            <arg evaluator="xml" expression="get-property('ShippingCost')"/>
+            <arg evaluator="xml" expression="get-property('OrderDate')"/>
+        </args>
+    </payloadFactory>
+    <datamapper config="gov:datamapper/JSONtoCSVConfig.dmc" inputSchema="gov:datamapper/JSONtoCSVConfig_inputSchema.json" inputType="JSON" outputSchema="gov:datamapper/JSONtoCSVConfig_outputSchema.json" outputType="CSV" xsltStyleSheet="gov:datamapper/JSONtoCSVConfig_xsltStyleSheet.xml"/>
+    <enrich description="save payload">
+        <source clone="true" type="body"/>
+        <target property="Orderdata" type="property"/>
+    </enrich>
+    <file.checkExist configKey="localconnection">
+        <path>/order/Orderdata.csv</path>
+        <includeResultTo>Message Body</includeResultTo>
+    </file.checkExist>
+    <filter regex="true" source="//checkExistResult/fileExists/text()">
+        <then>
+            <log level="custom">
+                <property name="Message" value="&quot;File already exists&quot;"/>
+            </log>
+        </then>
+        <else>
+            <log level="full">
+                <property expression="get-property('payload')" name="CSV Payload"/>
+            </log>
+            <file.write configKey="localconnection">
+                <filePath>/order/Orderdata.csv</filePath>
+                <contentOrExpression>OrderID,CustomerID,ProductID,Quantity,TotalAmount,ShippingCost,OrderDate</contentOrExpression>
+                <mimeType>Automatic</mimeType>
+                <compress>false</compress>
+                <writeMode>Create New</writeMode>
+                <enableStreaming>false</enableStreaming>
+                <appendNewLine>true</appendNewLine>
+                <enableLock>false</enableLock>
+                <includeResultTo>Message Body</includeResultTo>
+                <updateLastModified>false</updateLastModified>
+            </file.write>
+        </else>
+    </filter>
+    <enrich description="Saved payload">
+        <source clone="true" property="Orderdata" type="property"/>
+        <target type="body"/>
+    </enrich>
+    <file.write configKey="localconnection">
+        <filePath>/order/Orderdata.csv</filePath>
+        <mimeType>Automatic</mimeType>
+        <writeMode>Append</writeMode>
+        <appendPosition>2</appendPosition>
+        <enableStreaming>false</enableStreaming>
+        <appendNewLine>true</appendNewLine>
+        <enableLock>false</enableLock>
+        <includeResultTo>Message Body</includeResultTo>
+        <updateLastModified>false</updateLastModified>
+    </file.write>
+    <call-template description="Call global-log-temp" target="global-log-temp">
+        <with-param name="status" value="Start"/>
+        <with-param name="level" value="custom"/>
+        <with-param name="message" value="generate-CSV-report-sequence-End"/>
+        <with-param name="error" value="false"/>
+    </call-template>
+</sequence>
