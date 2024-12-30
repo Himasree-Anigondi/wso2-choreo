@@ -9,7 +9,6 @@
   <name>generateSalesReport</name>
   <description>generateSalesReport</description>
   <modules>
-    <module>ReportDataserviceConfigs</module>
     <module>generateSalesReportConfigs</module>
     <module>generateSalesReportCompositeExporter</module>
   </modules>
