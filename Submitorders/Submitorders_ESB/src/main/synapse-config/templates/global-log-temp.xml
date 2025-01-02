@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template name="global-log-temp" xmlns="http://ws.apache.org/ns/synapse">
+    <parameter defaultValue="" isMandatory="false" name="status"/>
+    <parameter defaultValue="" isMandatory="false" name="message"/>
+    <sequence>
+        <filter regex="full" source="$func:level">
+            <then>
+                <log level="full">
+                    <property expression="fn:concat('FLOW=', $func:status, ', CORRELATION_ID=', $ctx:correlation_id, ', API_NAME=', $ctx:X-API-Name, ', API_RESOURCE=', $ctx:X-API-Resource,  ', SEQUENCE_NAME=', $ctx:X-Sequence-Name, ', MESSAGE=', $func:message)" name="log"/>
+                </log>
+            </then>
+            <else>
+                <log level="custom">
+                    <property expression="fn:concat('FLOW=', $func:status, ', CORRELATION_ID=', $ctx:correlation_id, ', API_NAME=', $ctx:X-API-Name, ', API_RESOURCE=', $ctx:X-API-Resource,  ', SEQUENCE_NAME=', $ctx:X-Sequence-Name, ', MESSAGE=', $func:message)" name="log"/>
+                </log>
+            </else>
+        </filter>
+    </sequence>
+</template>

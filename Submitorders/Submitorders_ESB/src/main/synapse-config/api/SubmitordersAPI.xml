@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/submitOrder" name="SubmitorderAPI" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="POST">
+        <inSequence>
+            <sequence description="Call createorders-sequence" key="createorders-sequence"/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence>
+            <call-template description="Error start log" target="global-log-temp">
+                <with-param name="status" value="Start"/>
+                <with-param name="level" value="custom"/>
+                <with-param name="message" value="common-fault-sequence-executed"/>
+                <with-param name="error" value="true"/>
+            </call-template>
+            <sequence description="common-fault-sequence" key="common-fault-sequence"/>
+        </faultSequence>
+    </resource>
+</api>

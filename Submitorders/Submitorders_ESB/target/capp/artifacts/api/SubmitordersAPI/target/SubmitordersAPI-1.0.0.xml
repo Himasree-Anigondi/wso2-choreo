@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/submitOrder" name="SubmitorderAPI" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="POST">
+        <inSequence>
+            <log level="custom">
+                <property expression="get-property('JSON_PAYLOAD')" name="Order_Submission"/>
+            </log>
+            <!-- Set the incoming payload as a property -->
+            <property expression="json-eval($.))" name="JSON_PAYLOAD" scope="default" type="STRING"/>
+            <class name="com.example.mediators.OrderValidationMediator"/>
+            <log level="custom">
+                <property name="Validation_Status" value="Success"/>
+            </log>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence>
+            <log level="custom">
+                <property expression="get-property('ERROR_MESSAGE')" name="Error"/>
+            </log>
+            <respond/>
+        </faultSequence>
+    </resource>
+</api>

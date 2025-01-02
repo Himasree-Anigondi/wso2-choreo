@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="createorders-sequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <propertyGroup>
+        <property name="X-API-Name" scope="default" type="STRING" value="SubmitorderAPI"/>
+        <property name="X-API-Resource" scope="default" type="STRING" value="/submitOrder"/>
+        <property name="X-Sequence-Name" scope="default" type="STRING" value="createorders-sequence.xml"/>
+    </propertyGroup>
+    <call-template description="Call global-log-temp" target="global-log-temp">
+        <with-param name="status" value="Start"/>
+        <with-param name="level" value="custom"/>
+        <with-param name="message" value="createorders-sequence-Start"/>
+        <with-param name="error" value="false"/>
+    </call-template>
+    <sequence description="Call requestvalidation-sequence" key="requestvalidation-sequence"/>
+    <sequence description="Call getcustomerstatus-sequence" key="getcustomerstatus-sequence"/>
+    <call-template description="Call global-log-temp" target="global-log-temp">
+        <with-param name="status" value="Start"/>
+        <with-param name="level" value="custom"/>
+        <with-param name="message" value="createorders-sequence-End"/>
+        <with-param name="error" value="false"/>
+    </call-template>
+    <respond/>
+</sequence>

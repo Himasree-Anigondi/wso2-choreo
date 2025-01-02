@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="common-fault-sequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <propertyGroup>
+        <property name="X-API-Name" scope="default" type="STRING" value="dataSourcePocAPI"/>
+        <property name="X-API-Resource" scope="default" type="STRING" value="/createTransaction"/>
+        <property name="X-Sequence-Name" scope="default" type="STRING" value="common-fault-sequence.xml"/>
+    </propertyGroup>
+    <property expression="get-property(&quot;SYSTEM_DATE&quot;, &quot;yyyy-MM-dd'T'HH:mm:ss.SSS&quot;)" name="ErrorTime" scope="default" type="STRING"/>
+    <call-template description="Error start log" target="global-log-temp">
+        <with-param name="status" value="Start"/>
+        <with-param name="level" value="custom"/>
+        <with-param name="message" value="common-fault-sequence-start"/>
+        <with-param name="error" value="true"/>
+    </call-template>
+    <filter regex="495" source="$axis2:HTTP_SC">
+        <then>
+            <payloadFactory media-type="json">
+                <format>{&#xd;
+    "Errors": [&#xd;
+        {&#xd;
+            "Message": "An error has occured",&#xd;
+            "Timestamp": "$1",&#xd;
+            "Error-Code": "$2",&#xd;
+            "Error-Message": "$3",&#xd;
+            "Error-Details": "$4"&#xd;
+        }&#xd;
+    ]&#xd;
+}</format>
+                <args>
+                    <arg evaluator="json" expression="$ctx:ErrorTime"/>
+                    <arg evaluator="json" expression="$ctx:ERROR_CODE"/>
+                    <arg evaluator="json" expression="$ctx:CustomErroMessage"/>
+                    <arg evaluator="json" expression="$ctx:ERROR_DETAIL"/>
+                </args>
+            </payloadFactory>
+            <call-template description="Error End log" target="global-log-temp">
+                <with-param name="status" value="End"/>
+                <with-param name="level" value="custom"/>
+                <with-param name="message" value="common-fault-sequence-End"/>
+                <with-param name="error" value="true"/>
+            </call-template>
+        </then>
+        <else>
+            <payloadFactory media-type="json">
+                <format>{&#xd;
+    "Errors": [&#xd;
+        {&#xd;
+            "Message": "An error has occured",&#xd;
+            "Timestamp": "$1",&#xd;
+            "Error-Code": "$2",&#xd;
+            "Error-Message": "$3",&#xd;
+            "Error-Details": "$4"&#xd;
+        }&#xd;
+    ]&#xd;
+}</format>
+                <args>
+                    <arg evaluator="json" expression="$ctx:ErrorTime"/>
+                    <arg evaluator="json" expression="$ctx:ERROR_CODE"/>
+                    <arg evaluator="json" expression="$ctx:CustomErroMessage"/>
+                    <arg evaluator="json" expression="$ctx:ERROR_DETAIL"/>
+                </args>
+            </payloadFactory>
+            <call-template description="Error End log" target="global-log-temp">
+                <with-param name="status" value="End"/>
+                <with-param name="level" value="custom"/>
+                <with-param name="message" value="common-fault-sequence-End"/>
+                <with-param name="error" value="true"/>
+            </call-template>
+        </else>
+    </filter>
+    <respond/>
+</sequence>

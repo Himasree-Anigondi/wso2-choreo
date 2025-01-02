@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="SubmitordersAPI" groupId="com.example.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/api/SubmitordersAPI.xml</file>
+    </artifact>
+    <artifact name="SubmitordersAPI_swagger" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/SubmitordersAPI_swagger.yaml</file>
+    </artifact>
+    <artifact name="SubmitordersAPI_metadata" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/SubmitordersAPI_metadata.yaml</file>
+    </artifact>
+    <artifact name="global-log-temp" groupId="com.example.template" version="1.0.0" type="synapse/sequenceTemplate" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/templates/global-log-temp.xml</file>
+    </artifact>
+    <artifact name="common-fault-sequence" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/common-fault-sequence.xml</file>
+    </artifact>
+    <artifact name="createorders-sequence" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/createorders-sequence.xml</file>
+    </artifact>
+    <artifact name="requestvalidation-sequence" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/requestvalidation-sequence.xml</file>
+    </artifact>
+    <artifact name="getcustomerstatus-sequence" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/getcustomerstatus-sequence.xml</file>
+    </artifact>
+</artifacts>

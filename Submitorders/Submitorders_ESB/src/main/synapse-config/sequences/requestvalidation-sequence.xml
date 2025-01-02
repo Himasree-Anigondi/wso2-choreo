@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="requestvalidation-sequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <propertyGroup>
+        <property name="X-API-Name" scope="default" type="STRING" value="SubmitorderAPI"/>
+        <property name="X-API-Resource" scope="default" type="STRING" value="/submitOrder"/>
+        <property name="X-Sequence-Name" scope="default" type="STRING" value="requestvalidation-sequence.xml"/>
+    </propertyGroup>
+    <call-template description="Call global-log-temp" target="global-log-temp">
+        <with-param name="status" value="Start"/>
+        <with-param name="level" value="custom"/>
+        <with-param name="message" value="requestvalidation-sequence-Start"/>
+        <with-param name="error" value="false"/>
+    </call-template>
+    <property expression="json-eval($)" name="REST_FULL_REQUEST" scope="default" type="STRING"/>
+    <class name="com.example.mediators.OrderValidationMediator"/>
+    <filter regex="^true$" source="get-property('orderValidationSuccess')">
+        <then>
+            <log level="custom">
+                <property name="Validation Status" value="Success"/>
+            </log>
+        </then>
+        <else>
+            <log level="custom">
+                <property name="Validation Status" value="Failure"/>
+            </log>
+            <propertyGroup>
+                <property name="HTTP_SC" scope="axis2" type="STRING" value="400"/>
+                <property name="ERROR_CODE" scope="default" type="STRING" value="400"/>
+                <property name="CustomErroMessage" scope="default" type="STRING" value="Error occurred while validating the payload."/>
+                <property name="ERROR_DETAIL" scope="default" type="STRING" value="Error during payload validation"/>
+            </propertyGroup>
+            <sequence key="common-fault-sequence"/>
+        </else>
+    </filter>
+    <call-template description="Call global-log-temp" target="global-log-temp">
+        <with-param name="status" value="Start"/>
+        <with-param name="level" value="custom"/>
+        <with-param name="message" value="requestvalidation-sequence-End"/>
+        <with-param name="error" value="false"/>
+    </call-template>
+</sequence>
