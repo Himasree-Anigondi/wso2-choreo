@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/filter" name="FilterMediatorAPI" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="POST">
+        <inSequence>
+            <filter xmlns:xsi="http://customerinfo.com" xpath="//CustomerInformation/Category ='Platinum' and //CustomerInformation/FirstName ='Himasree'">
+                <then>
+                    <property name="Discount" scope="default" type="STRING" value="Eligible for discounts"/>
+                </then>
+                <else>
+                    <property name="Discount" scope="default" type="STRING" value="Not Eligible"/>
+                </else>
+            </filter>
+            <payloadFactory media-type="xml">
+                <format>
+                    <Eligibility xmlns="">
+                        <Status>1</Status>
+                        <Description>$1</Description>
+                    </Eligibility>
+                </format>
+                <args>
+                    <arg evaluator="xml" expression="get-property('Discount')"/>
+                </args>
+            </payloadFactory>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </resource>
+    <resource methods="POST" uri-template="/json">
+        <inSequence>
+            <filter xpath="//Category = 'Platinum' and //CustomerId = '9'">
+                <then>
+                    <property name="Discounts" scope="default" type="STRING" value="Eligible for discounts"/>
+                </then>
+                <else>
+                    <property name="Discounts" scope="default" type="STRING" value="Not Eligible"/>
+                </else>
+            </filter>
+            <payloadFactory media-type="xml">
+                <format>
+                    <Eligibility xmlns="">
+                        <Status>1</Status>
+                        <Description>$1</Description>
+                    </Eligibility>
+                </format>
+                <args>
+                    <arg evaluator="xml" expression="get-property('Discounts')"/>
+                </args>
+            </payloadFactory>
+            <property name="messageType" scope="axis2" type="STRING" value="application/json"/>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </resource>
+</api>
