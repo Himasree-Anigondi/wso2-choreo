@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<api context="/oredrdetails" name="CustomerAPI" xmlns="http://ws.apache.org/ns/synapse">
+<api context="/orderdetails" name="CustomerAPI" xmlns="http://ws.apache.org/ns/synapse">
     <resource methods="GET" uri-template="/{CustomerID}">
         <inSequence>
             <property expression="get-property('uri.var.CustomerID')" name="CustomerID" scope="default" type="STRING"/>

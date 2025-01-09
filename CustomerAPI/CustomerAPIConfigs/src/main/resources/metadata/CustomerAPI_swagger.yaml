@@ -4,7 +4,7 @@ info:
   description: API Definition of CustomerAPI
   version: 1.0.0
 servers:
-- url: http://localhost:8290/oredrdetails
+- url: http://localhost:8290/orderdetails
 paths:
   /{CustomerID}:
     get:
