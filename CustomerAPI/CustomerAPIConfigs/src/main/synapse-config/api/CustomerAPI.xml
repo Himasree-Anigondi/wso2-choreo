@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/oredrdetails" name="CustomerAPI" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="GET" uri-template="/{CustomerID}">
+        <inSequence>
+            <property expression="get-property('uri.var.CustomerID')" name="CustomerID" scope="default" type="STRING"/>
+            <log level="custom">
+                <property name="Message" value="&quot;Request Received&quot;"/>
+            </log>
+            <dblookup>
+                <connection>
+                    <pool>
+                        <driver>com.mysql.cj.jdbc.Driver</driver>
+                        <url>$SYSTEM:DB_URL</url>
+                        <user>$SYSTEM:DB_USER</user>
+                        <password>$SYSTEM:DB_PASSWORD</password>
+                    </pool>
+                </connection>
+                <statement>
+                    <sql><![CDATA[SELECT * FROM OrdersData WHERE CustomerID = ?]]></sql>
+                    <parameter expression="get-property('CustomerID')" type="VARCHAR"/>
+                    <result column="ShippingCost" name="ShippingCost"/>
+                    <result column="Quantity" name="Quantity"/>
+                    <result column="ProductID" name="ProductID"/>
+                    <result column="CustomerID" name="CustomerID"/>
+                    <result column="TotalAmount" name="TotalAmount"/>
+                    <result column="OrderID" name="OrderID"/>
+                    <result column="OrderDate" name="OrderDate"/>
+                </statement>
+            </dblookup>
+            <payloadFactory media-type="json">
+                <format>{&#xd;
+	"OrderData": {&#xd;
+		"OrderID": "$1",&#xd;
+		"CustomerID": "$2",&#xd;
+		"ProductID": "$3",&#xd;
+		"Quantity": "$4",&#xd;
+		"TotalAmount": "$5",&#xd;
+		"ShippingCost": "$6",&#xd;
+		"OrderDate":"$7"&#xd;
+	}&#xd;
+}</format>
+                <args>
+                    <arg evaluator="xml" expression="get-property('OrderID')"/>
+                    <arg evaluator="xml" expression="get-property('CustomerID')"/>
+                    <arg evaluator="xml" expression="get-property('ProductID')"/>
+                    <arg evaluator="xml" expression="get-property('Quantity')"/>
+                    <arg evaluator="xml" expression="get-property('TotalAmount')"/>
+                    <arg evaluator="xml" expression="get-property('ShippingCost')"/>
+                    <arg evaluator="xml" expression="get-property('OrderDate')"/>
+                </args>
+            </payloadFactory>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </resource>
+</api>
