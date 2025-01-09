@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <api context="/orderdetails" name="CustomerAPI" xmlns="http://ws.apache.org/ns/synapse">
     <resource methods="GET" uri-template="/{CustomerID}">
         <inSequence>
@@ -10,9 +10,9 @@
                 <connection>
                     <pool>
                         <driver>com.mysql.cj.jdbc.Driver</driver>
-                        <url>$SYSTEM:DB_URL</url>
-                        <user>$SYSTEM:DB_USER</user>
-                        <password>$SYSTEM:DB_PASSWORD</password>
+                        <url>jdbc:mysql://mysql-7bafa191-ccdf-49e6-9b5a-392c3234bf32-customer1995935094-c.i.aivencloud.com:20501/defaultdb</url>
+                        <user>avnadmin</user>
+                        <password>AVNS_ZgAqMkhi8D6PXKpMAN8</password>
                     </pool>
                 </connection>
                 <statement>
