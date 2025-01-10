@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/api" name="TestAPI" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="POST" uri-template="/testapi">
+        <inSequence>
+            <log level="custom">
+                <property name="Message" value="&quot;Request received&quot;"/>
+            </log>
+            <filter xmlns:xsi="http://customerinfo.com" xpath="//Category = 'Platinum'">
+                <then>
+                    <propertyGroup>
+                        <property name="Discount" scope="default" type="STRING" value="Eligible for discounts"/>
+                        <property name="Status" scope="default" type="STRING" value="Active"/>
+                    </propertyGroup>
+                </then>
+                <else>
+                    <propertyGroup>
+                        <property name="Discount" scope="default" type="STRING" value="Not Eligible for discounts"/>
+                        <property name="Status" scope="default" type="STRING" value="Inactive"/>
+                    </propertyGroup>
+                </else>
+            </filter>
+            <payloadFactory media-type="json">
+                <format>{&#xd;
+	"Eligibility": {&#xd;
+		"Status": "$1",&#xd;
+		"Description": "$2"&#xd;
+	}&#xd;
+}</format>
+                <args>
+                    <arg evaluator="xml" expression="get-property('Status')"/>
+                    <arg evaluator="xml" expression="get-property('Discount')"/>
+                </args>
+            </payloadFactory>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </resource>
+    <resource methods="POST" uri-template="/json">
+        <inSequence>
+            <filter xpath="//Category = 'Platinum' and //CustomerId = '9'">
+                <then>
+                    <property name="Discounts" scope="default" type="STRING" value="Eligible for discounts"/>
+                </then>
+                <else>
+                    <property name="Discounts" scope="default" type="STRING" value="Not Eligible"/>
+                </else>
+            </filter>
+            <payloadFactory media-type="xml">
+                <format>
+                    <Eligibility xmlns="">
+                        <Status>1</Status>
+                        <Description>$1</Description>
+                    </Eligibility>
+                </format>
+                <args>
+                    <arg evaluator="xml" expression="get-property('Discounts')"/>
+                </args>
+            </payloadFactory>
+            <property name="messageType" scope="axis2" type="STRING" value="application/json"/>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </resource>
+</api>

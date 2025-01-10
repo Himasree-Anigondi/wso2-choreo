@@ -1,0 +1,38 @@
+openapi: 3.0.1
+info:
+  title: TestAPI
+  description: API Definition of TestAPI
+  version: 1.0.0
+servers:
+- url: http://localhost:8290/api
+paths:
+  /testapi:
+    post:
+      requestBody:
+        description: Sample Payload
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: object
+        required: false
+      responses:
+        default:
+          description: Default response
+  /json:
+    post:
+      requestBody:
+        description: Sample Payload
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: object
+        required: false
+      responses:
+        default:
+          description: Default response
