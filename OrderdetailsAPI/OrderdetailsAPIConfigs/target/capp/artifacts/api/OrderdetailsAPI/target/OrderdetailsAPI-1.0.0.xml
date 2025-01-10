@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/api" name="OrderdetailsAPI" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="GET" uri-template="/getorders/{CustomerID}">
+        <inSequence>
+            <property expression="get-property('uri.var.CustomerID')" name="CustomerID" scope="default" type="STRING"/>
+            <log level="custom">
+                <property name="Message" value="&quot;Request Received&quot;"/>
+            </log>
+            <dblookup>
+                <connection>
+                    <pool>
+                        <driver>com.mysql.cj.jdbc.Driver</driver>
+                        <url>jdbc:mysql://mysql-7bafa191-ccdf-49e6-9b5a-392c3234bf32-customer1995935094-c.i.aivencloud.com:20501/Customerorders</url>
+                        <user>avnadmin</user>
+                        <password>AVNS_ZgAqMkhi8D6PXKpMAN8</password>
+                    </pool>
+                </connection>
+                <statement>
+                    <sql><![CDATA[SELECT * FROM OrdersData WHERE CustomerID = ?]]></sql>
+                    <parameter expression="get-property('CustomerID')" type="VARCHAR"/>
+                    <result column="ShippingCost" name="ShippingCost"/>
+                    <result column="Quantity" name="Quantity"/>
+                    <result column="ProductID" name="ProductID"/>
+                    <result column="CustomerID" name="CustomerID"/>
+                    <result column="TotalAmount" name="TotalAmount"/>
+                    <result column="OrderID" name="OrderID"/>
+                    <result column="OrderDate" name="OrderDate"/>
+                </statement>
+            </dblookup>
+            <payloadFactory media-type="json">
+                <format>{&#xd;
+	"OrderData": {&#xd;
+		"OrderID": "$1",&#xd;
+		"CustomerID": "$2",&#xd;
+		"ProductID": "$3",&#xd;
+		"Quantity": "$4",&#xd;
+		"TotalAmount": "$5",&#xd;
+		"ShippingCost": "$6",&#xd;
+		"OrderDate":"$7"&#xd;
+	}&#xd;
+}</format>
+                <args>
+                    <arg evaluator="xml" expression="get-property('OrderID')"/>
+                    <arg evaluator="xml" expression="get-property('CustomerID')"/>
+                    <arg evaluator="xml" expression="get-property('ProductID')"/>
+                    <arg evaluator="xml" expression="get-property('Quantity')"/>
+                    <arg evaluator="xml" expression="get-property('TotalAmount')"/>
+                    <arg evaluator="xml" expression="get-property('ShippingCost')"/>
+                    <arg evaluator="xml" expression="get-property('OrderDate')"/>
+                </args>
+            </payloadFactory>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </resource>
+    <resource methods="POST" uri-template="/postorders">
+        <inSequence>
+            <log level="custom">
+                <property name="Message" value="&quot;Request Received&quot;"/>
+            </log>
+            <propertyGroup>
+                <property expression="json-eval($.OrderID)" name="OrderID" scope="default" type="STRING"/>
+                <property expression="json-eval($.CustomerID)" name="CustomerID" scope="default" type="STRING"/>
+                <property expression="json-eval($.ProductID)" name="ProductID" scope="default" type="STRING"/>
+                <property expression="json-eval($.Quantity)" name="Quantity" scope="default" type="STRING"/>
+                <property expression="json-eval($.TotalAmount)" name="TotalAmount" scope="default" type="STRING"/>
+                <property expression="json-eval($.ShippingCost)" name="ShippingCost" scope="default" type="STRING"/>
+                <property expression="json-eval($.OrderDate)" name="OrderDate" scope="default" type="STRING"/>
+            </propertyGroup>
+            <dbreport>
+                <connection>
+                    <pool>
+                        <driver>com.mysql.cj.jdbc.Driver</driver>
+                        <url>jdbc:mysql://mysql-7bafa191-ccdf-49e6-9b5a-392c3234bf32-customer1995935094-c.i.aivencloud.com:20501/Customerorders</url>
+                        <user>avnadmin</user>
+                        <password>AVNS_ZgAqMkhi8D6PXKpMAN8</password>
+                    </pool>
+                </connection>
+                <statement>
+                    <sql><![CDATA[INSERT INTO OrdersData (OrderID, CustomerID, ProductID, Quantity, TotalAmount, ShippingCost, OrderDate)
+  VALUES (?, ?, ?, ?, ?, ?, ?)]]></sql>
+                    <parameter expression="get-property('OrderID')" type="INTEGER"/>
+                    <parameter expression="get-property('CustomerID')" type="VARCHAR"/>
+                    <parameter expression="get-property('ProductID')" type="VARCHAR"/>
+                    <parameter expression="get-property('Quantity')" type="INTEGER"/>
+                    <parameter expression="get-property('TotalAmount')" type="VARCHAR"/>
+                    <parameter expression="get-property('ShippingCost')" type="VARCHAR"/>
+                    <parameter expression="get-property('OrderDate')" type="VARCHAR"/>
+                </statement>
+            </dbreport>
+            <payloadFactory media-type="json">
+                <format>{&#xd;
+"Message" : "OrderData Inserted sucessfully"&#xd;
+}</format>
+                <args/>
+            </payloadFactory>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </resource>
+</api>
